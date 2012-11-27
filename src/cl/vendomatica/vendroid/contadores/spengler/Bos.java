@@ -1,5 +1,8 @@
 package cl.vendomatica.vendroid.contadores.spengler;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import android.util.Log;
 
 public class Bos {
@@ -9,17 +12,21 @@ private static final String TAG = "Bos";
 	public byte[] handle;
 	public byte[] file;
 	public Transaction transaction;
+	InputStream inputStream;
+	OutputStream outputStream;
 	/**
+	 * @param mmOutStream 
+	 * @param mmInStream 
 	 * 
 	 */
-	public Bos() {
+	public Bos(InputStream mmInStream, OutputStream mmOutStream) {
 		Log.d(TAG, "Creando objeto");
 //		comm = new Comm();
         size = new byte[4];
         handle = new byte[2];
 
 //        transaction = new Transaction(comm);
-        transaction = new Transaction();
+        transaction = new Transaction(mmInStream, mmOutStream);
 	}
 	
 	public boolean connect(String commPort, boolean capturaItagII)
@@ -46,6 +53,7 @@ private static final String TAG = "Bos";
 	
 	public boolean getFile(String fileName)
     {
+		Log.d(TAG, "getFile");
 		
         int n;
 

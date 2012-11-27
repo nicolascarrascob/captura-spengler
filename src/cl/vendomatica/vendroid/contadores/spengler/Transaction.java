@@ -1,5 +1,8 @@
 package cl.vendomatica.vendroid.contadores.spengler;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import android.util.Log;
 
 public class Transaction {
@@ -9,13 +12,13 @@ private static final String TAG = "Transaction";
     public Message request;
     public Message response;
 
-	public Transaction(/*Comm comm*/)
+	public Transaction(InputStream mmInStream, OutputStream mmOutStream/*Comm comm*/)
     {
 		Log.d(TAG, "Creando objeto");
 //        _comm = comm;
 //
-        request = new Message(/*_comm*/);
-        response = new Message(/*_comm*/);
+        request = new Message(mmOutStream);
+        response = new Message(mmInStream);
     }
 	
 	private boolean Execute()
