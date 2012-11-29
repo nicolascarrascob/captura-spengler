@@ -20,7 +20,7 @@ private static final String TAG = "Bos";
 	 * 
 	 */
 	public Bos(InputStream mmInStream, OutputStream mmOutStream) {
-		Log.d(TAG, "Creando objeto");
+		Log.d(TAG, "Creando Bos");
 //		comm = new Comm();
         size = new byte[4];
         handle = new byte[2];

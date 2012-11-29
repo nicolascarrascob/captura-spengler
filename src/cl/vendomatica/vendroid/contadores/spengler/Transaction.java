@@ -25,21 +25,23 @@ private static final String TAG = "Transaction";
     {
         try
         {
+        	request.send();
+        	
             response.receiveUntilStop();
 
             Thread.sleep(100);
 
-            request.send();
+//            request.send();
 
             Thread.sleep(100);
 
-            if (!response.receiveUntilStop())
-                return (false);
+//            if (!response.receiveUntilStop())
+//                return (false);
 
             Thread.sleep(100);
 
-            if (!response.receive())
-                return (false);
+//            if (!response.receive())
+//                return (false);
 
             return (true);
         }
@@ -78,7 +80,7 @@ private static final String TAG = "Transaction";
     public boolean RemoteFirst(String fileName, byte[] size)
     {
         int i;
-
+        Log.d(TAG, "RemoteFirst: " + fileName);
         TxFirst txFirst = new TxFirst(fileName);
 
         request.body.data = txFirst.ToByteArray();
