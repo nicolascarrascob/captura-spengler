@@ -26,8 +26,7 @@ import android.widget.Toast;
 import cl.vendomatica.vendroid.contadores.spengler.Bos;
 
 public class MainActivity extends ListActivity {
-	public static final UUID SERIAL_UUID = UUID
-			.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	public static final UUID SERIAL_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	String TAG = "MainActivity";
 	int REQUEST_ENABLE_BT = 1;
 	int REQUEST_DISCOVERABLE_BT = 1;
@@ -39,14 +38,12 @@ public class MainActivity extends ListActivity {
 	TextView textView;
 	Button mButtonIniciarServicio;
 	Button mButtonConectarse;
-	// Button mButtonEnviar;
 	Button mButtonObtener;
 	Button mButtonDesconectar;
-	// Button mButtonPresencia;
 
 	BluetoothAdapter mBluetoothAdapter;
 	BluetoothSocket mConnectedSocket;
-	ConnectedThread mConnectedThread;
+	//	ConnectedThread mConnectedThread;
 	Set<BluetoothDevice> pairedDevices;
 	ArrayList<BluetoothDevice> bluetoothDevices;
 
@@ -58,13 +55,10 @@ public class MainActivity extends ListActivity {
 		setContentView(R.layout.activity_main);
 		textView = (TextView) findViewById(R.id.textView1);
 		mButtonConectarse = (Button) findViewById(R.id.btn_conectar);
-		// mButtonEnviar = (Button) findViewById(R.id.btn_enviar);
 		mButtonDesconectar = (Button) findViewById(R.id.btn_desconectar);
-		// mButtonPresencia = (Button) findViewById(R.id.btn_presencia);
-		getBT();
-		openBT();
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-				.getDefaultAdapter();
+		obtenerBluetooth();
+		habilitarBluetooth();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		pairedDevices = mBluetoothAdapter.getBondedDevices();
 		bluetoothDevices = new ArrayList<BluetoothDevice>();
 
@@ -74,8 +68,7 @@ public class MainActivity extends ListActivity {
 			bluetoothDevices.add(bt);
 		}
 
-		setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, s));
+		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, s));
 	}
 
 	@Override
@@ -85,37 +78,28 @@ public class MainActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 	}
 
-	private void getBT() {
+	private void obtenerBluetooth() {
 		/*
 		 * Obtiene el adaptador del dispositivo y verifica si existe
 		 */
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null) {
-			Toast.makeText(this, "El dispositivo no tiene bluetooth",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "El dispositivo no tiene bluetooth", Toast.LENGTH_SHORT).show();
 			Log.d(TAG, "El dispositivo no tiene bluetooth");
 		} else {
-			Toast.makeText(
-					this,
-					"El dispositivo si tiene bluetooth: "
-							+ mBluetoothAdapter.getName() + " - "
-							+ mBluetoothAdapter.getAddress(),
+			Toast.makeText(	this,"El dispositivo si tiene bluetooth: "+ mBluetoothAdapter.getName() + " - "	+ mBluetoothAdapter.getAddress(),
 					Toast.LENGTH_SHORT).show();
-			Log.d(TAG,
-					"El dispositivo si tiene bluetooth: "
-							+ mBluetoothAdapter.getName() + " - "
-							+ mBluetoothAdapter.getAddress());
+			Log.d(TAG,"El dispositivo si tiene bluetooth: " + mBluetoothAdapter.getName() + " - "+ mBluetoothAdapter.getAddress());
 		}
 	}
 
-	private void openBT() {
+	private void habilitarBluetooth() {
 		/*
 		 * Verifica si el bluetooth esta activado, en caso contrario solicita
 		 * activarlo
 		 */
 		if (!mBluetoothAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
 	}
@@ -129,9 +113,8 @@ public class MainActivity extends ListActivity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		mConnectedThread = null;
+		//		mConnectedThread = null;
 		mButtonConectarse.setEnabled(true);
-		// mButtonEnviar.setEnabled(false);
 		mButtonDesconectar.setEnabled(false);
 	}
 
@@ -144,7 +127,7 @@ public class MainActivity extends ListActivity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		mConnectedThread = null;
+		//		mConnectedThread = null;
 		mButtonConectarse.setEnabled(true);
 		mButtonDesconectar.setEnabled(false);
 	}
@@ -199,95 +182,106 @@ public class MainActivity extends ListActivity {
 		// Con el socket conectado, inicia un nuevo hilo para obtener los
 		// canales de comunicaci�n
 		mConnectedSocket = socket;
-		mConnectedThread = new ConnectedThread(socket);
-		mConnectedThread.start();
 
-		Bos bos = new Bos(mConnectedThread.mmInStream,
-				mConnectedThread.mmOutStream);
-//		Toast.makeText(this, "ejecuantodo getfile", Toast.LENGTH_SHORT).show();
-		if (bos.getFile("OPNCASH.DAT")) {
-			
-			for (int j = 0; j < bos.file.length; j = j + 44) {
-				int i = 0;
-				int n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
-						* bos.file[j + i + 2] + 256 * 256 * 256
-						* bos.file[j + i + 3];
+		try {
+			InputStream inputStream = socket.getInputStream();
 
-				String moneda = "M" + String.valueOf(n);
+			OutputStream outputStream = socket.getOutputStream();
 
-				i = 4;
-				n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
-						* bos.file[j + i + 2] + 256 * 256 * 256
-						* bos.file[j + i + 3];
+			Bos bos = new Bos(inputStream, outputStream);
 
-				String cantidad = String.valueOf(n);
-				Log.d(TAG, moneda + " " + cantidad);
-			}
-		}
+			if(!bos.connect("", false)){
+				Log.d(TAG, "No pudo conectar a Spengler");
+				socket.close();
+			}else{
 
-		mButtonConectarse.setEnabled(false);
-		// mButtonEnviar.setEnabled(true);
-		mButtonDesconectar.setEnabled(true);
-	}
+				Log.d(TAG, "Conectado a Spengler");
 
-	private class ConnectedThread extends Thread {
-		private final BluetoothSocket mmSocket;
-		public final InputStream mmInStream;
-		public final OutputStream mmOutStream;
+				if (bos.getFile("OPNCASH.DAT")) {
+					Log.d(TAG, "Abrio");
+					for (int j = 0; j < bos.file.length; j = j + 44) {
+						int i = 0;
+						int n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
+								* bos.file[j + i + 2] + 256 * 256 * 256
+								* bos.file[j + i + 3];
 
-		public ConnectedThread(BluetoothSocket socket) {
-			mmSocket = socket;
-			InputStream tmpIn = null;
-			OutputStream tmpOut = null;
+						String moneda = "M" + String.valueOf(n);
 
-			try {
-				// Obtiene los canales de comunicacion desde el socket conectado
-				// al ITAGII
-				tmpIn = socket.getInputStream();
-				tmpOut = socket.getOutputStream();
-			} catch (IOException e) {
-			}
+						i = 4;
+						n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
+								* bos.file[j + i + 2] + 256 * 256 * 256
+								* bos.file[j + i + 3];
 
-			mmInStream = tmpIn;
-			mmOutStream = tmpOut;
-		}
-
-		public void run() {
-			byte[] buffer = new byte[1024]; // buffer store for the stream
-			int bytes; // bytes returned from read()
-			// Mientras se mantiene la conexion, el canal de recepcion esta
-			// siempre escuchando
-			while (true) {
-				try {
-					// Lee el mensaje desde el canal
-					bytes = mmInStream.read(buffer);
-					String readMessage = new String(buffer, 0, bytes);
-
-					Log.d(TAG, "Mensaje obtenido: " + readMessage);
-					// Envia el mensaje para manejarlo en la UI
-					mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-							.sendToTarget();
-				} catch (IOException e) {
-					break;
+						String cantidad = String.valueOf(n);
+						Log.d(TAG, moneda + " " + cantidad);
+					}
 				}
 			}
+
+			mButtonConectarse.setEnabled(false);
+			mButtonDesconectar.setEnabled(true);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		// Envia los datos (bytes) hacia el dispositivo remoto
-		public void write(byte[] bytes) {
-			try {
-				// if(mmSocket.isConnected()){
-				Log.d(TAG, "Enviando: " + bytes);
-				mmOutStream.write(bytes);
-				mmOutStream.flush();
-				// }else{
-				// Log.d(TAG, "Socket no conectado");
-				// }
-			} catch (IOException e) {
-
-			}
-		}
 	}
+
+	//	private class ConnectedThread extends Thread {
+	//		private final BluetoothSocket mmSocket;
+	//		public final InputStream mmInStream;
+	//		public final OutputStream mmOutStream;
+	//
+	//		public ConnectedThread(BluetoothSocket socket) {
+	//			mmSocket = socket;
+	//			InputStream tmpIn = null;
+	//			OutputStream tmpOut = null;
+	//
+	//			try {
+	//				// Obtiene los canales de comunicacion desde el socket conectado
+	//				// al ITAGII
+	//				tmpIn = socket.getInputStream();
+	//				tmpOut = socket.getOutputStream();
+	//			} catch (IOException e) {
+	//			}
+	//
+	//			mmInStream = tmpIn;
+	//			mmOutStream = tmpOut;
+	//		}
+	//
+	//		public void run() {
+	//			byte[] buffer = new byte[1024]; // buffer store for the stream
+	//			int bytes; // bytes returned from read()
+	//			// Mientras se mantiene la conexion, el canal de recepcion esta
+	//			// siempre escuchando
+	////			while (true) {
+	////				try {
+	////					// Lee el mensaje desde el canal
+	////					bytes = mmInStream.read(buffer);
+	////					String readMessage = new String(buffer, 0, bytes);
+	////
+	////					Log.d(TAG, "Mensaje obtenido: " + readMessage);
+	////					// Envia el mensaje para manejarlo en la UI
+	////					mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
+	////							.sendToTarget();
+	////				} catch (IOException e) {
+	////					break;
+	////				}
+	////			}
+	//		}
+	//
+	//		// Envia los datos (bytes) hacia el dispositivo remoto
+	//		public void write(byte[] bytes) {
+	//			try {
+	//				Log.d(TAG, "Enviando: " + bytes);
+	//				mmOutStream.write(bytes);
+	//				mmOutStream.flush();
+	//			} catch (IOException e) {
+	//
+	//			}
+	//		}
+	//	}
 
 	// The Handler that gets information back from the BluetoothChatService
 	private final Handler mHandler = new Handler() {
@@ -306,4 +300,8 @@ public class MainActivity extends ListActivity {
 			}
 		}
 	};
+	
+	public static  int convertirByte(byte b){
+		return 0x000000FF & ((int) b);
+	}
 }

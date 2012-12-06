@@ -1,7 +1,10 @@
 package cl.vendomatica.vendroid.contadores.spengler;
 
+import android.util.Log;
+
 public class RxFirst {
-    public byte[] Func = new byte[2];
+    private static final String TAG = "RxFirst";
+	public byte[] Func = new byte[2];
     public byte[] Error = new byte[2];
     public byte[] Reserved = new byte[21];
     public byte[] Attrib = new byte[1];
@@ -12,6 +15,10 @@ public class RxFirst {
     
     public RxFirst(byte[] data)
     {
+
+
+
+		Log.d(TAG, "Creado objeto");
         int i, j = 0;
 
         for (i = 0; i < Func.length; i++)
