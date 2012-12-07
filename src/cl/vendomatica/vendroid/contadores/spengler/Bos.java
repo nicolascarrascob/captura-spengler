@@ -39,7 +39,7 @@ private static final String TAG = "Bos";
 //        if (!transaction.RemoteXCount())
 //            if (!transaction.RemoteXCount())
 //                return (false);
-            
+//            
         return (true);
     }
 	
@@ -54,8 +54,8 @@ private static final String TAG = "Bos";
 
         n = MainActivity.convertirByte(size[0]) + 256 * MainActivity.convertirByte(size[1]);
 
-        if (n==0)
-            return (false);
+//        if (n==0)
+//            return (false);
 
         if (file != null)
             file = null;

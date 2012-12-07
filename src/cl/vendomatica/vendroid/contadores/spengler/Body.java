@@ -11,7 +11,8 @@ public class Body {
 
         for (i = 0; i < data.length; i++)
         {
-            sum ^= (0x000000FF & (data[i]));
+//            sum ^= (0x000000FF & (data[i]));
+            sum = 0x000000FF & (data[i]);
 //            sum ^= data[i];
 
             if ((sum & 0x01) == 0x01)

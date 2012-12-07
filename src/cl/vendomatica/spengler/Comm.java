@@ -31,7 +31,7 @@ public class Comm {
 		try
 		{
 			int i = 0x000000FF & ((int) buffer[0]);
-			Log.d("COMM","Envia: " + i +"");
+//			Log.d("COMM","Envia: " + i +"");
 			outputStream.write(i);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -85,11 +85,12 @@ public class Comm {
 		byte[] buffer = new byte[1];
 
 		try {
-
-			if(inputStream.available() == 0){
+			int bytesPorLeer = inputStream.available();
+//			Log.d("COMM", "bytes por leer: " + bytesPorLeer);
+			if(bytesPorLeer == 0){
 				Thread.sleep(5000); // emula timeout
 				if(inputStream.available() == 0){
-					Log.d("COMM","no vienen mas datos");
+//					Log.d("COMM","no vienen mas datos");
 					resultado.setResult(false);
 					return resultado;
 				}
@@ -98,7 +99,7 @@ public class Comm {
 			n = inputStream.read(buffer, 0, 1);
 			data = buffer[0];
 
-			Log.d("COMM","Lee: " + data +"");
+//			Log.d("COMM","Lee: " + (0x000000FF & ((int) data)) +"");
 			resultado.setB(data);
 			resultado.setResult(n!= 0);
 			return resultado;

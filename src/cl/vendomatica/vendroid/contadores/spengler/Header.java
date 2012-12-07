@@ -22,7 +22,8 @@ public class Header {
 	
 	private int Checksum(int sum, byte data)
     {                            
-        sum ^= (0x000000FF & (data));
+//        sum ^= (0x000000FF & (data));
+        sum = 0x000000FF & (sum ^ data);
 //        sum ^= data;
             
         if ((sum & 0x01) == 0x01)                    

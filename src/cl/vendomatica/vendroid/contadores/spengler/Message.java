@@ -74,7 +74,7 @@ public class Message {
                 return (false);
 			}
 			b = commReadReturn.getB();
-			Log.d(TAG, "Recibe: " + (0x000000FF & ((int)b)) + ""); 
+//			Log.d(TAG, "Recibe: " + (0x000000FF & ((int)b)) + ""); 
 
 		} while (b != Comm.STOP_CHAR);
 
@@ -149,13 +149,13 @@ public class Message {
         body.data = new byte[len];
 
         if (!_comm.read( body.data))
-            return (false);
+//            return (false);
 
         Log.d(TAG, "Receive body.data: " + Arrays.toString(body.data));
 
         commReadReturn = _comm.read( body.chk);
         if (!commReadReturn.isResult())
-            return (false);
+//            return (false);
         body.chk = commReadReturn.getB();
         Log.d(TAG, "Receive  body.chk: " + body.chk);
 
@@ -170,7 +170,7 @@ public class Message {
         //    return (false);
 
 
-        Log.d(TAG, "Retorna true" + header.chk);
+        Log.d(TAG, "Retorna true" );
         return (true);
 		
 	}

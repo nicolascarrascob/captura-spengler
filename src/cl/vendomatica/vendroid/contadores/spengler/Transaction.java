@@ -153,7 +153,7 @@ private static final String TAG = "Transaction";
     public boolean RemoteRead(byte[] handle, byte[] size, byte[] file)
     {
 
-    	Log.d(TAG, "Ejecutando RemoteOpen");
+    	Log.d(TAG, "Ejecutando RemoteRead");
         int i;
 
         TxFRead txFRead = new TxFRead(handle, size);
@@ -190,7 +190,7 @@ private static final String TAG = "Transaction";
     public boolean RemoteClose(byte[] handle)
     {
 
-    	Log.d(TAG, "Ejecutando RemoteOpen");
+    	Log.d(TAG, "Ejecutando RemoteClose");
         TxFClose txFClose = new TxFClose(handle);
 
         request.body.data = txFClose.ToByteArray();
