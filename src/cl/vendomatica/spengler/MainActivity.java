@@ -86,16 +86,16 @@ public class MainActivity extends ListActivity {
 			
 			for (int j = 0; j < buffer.length; j = j + 44) {
 				int i = 0;
-				int n = buffer[j + i] + 256 * buffer[j + i + 1] + 256 * 256
-						* buffer[j + i + 2] + 256 * 256 * 256
-						* buffer[j + i + 3];
+				int n = convertirByte(buffer[j + i]) + 256 * convertirByte(buffer[j + i + 1]) + 256 * 256
+						* convertirByte(buffer[j + i + 2]) + 256 * 256 * 256
+						* convertirByte(buffer[j + i + 3]);
 
 				String moneda = "M" + String.valueOf(n);
 
 				i = 4;
-				n = buffer[j + i] + 256 * buffer[j + i + 1] + 256 * 256
-						* buffer[j + i + 2] + 256 * 256 * 256
-						* buffer[j + i + 3];
+				n = convertirByte(buffer[j + i]) + 256 * convertirByte(buffer[j + i + 1]) + 256 * 256
+						* convertirByte(buffer[j + i + 2]) + 256 * 256 * 256
+						* convertirByte(buffer[j + i + 3]);
 
 				String cantidad = String.valueOf(n);
 				Log.d(TAG, moneda + " " + cantidad);
