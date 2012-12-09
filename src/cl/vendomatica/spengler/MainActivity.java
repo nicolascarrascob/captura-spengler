@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
@@ -58,9 +59,7 @@ public class MainActivity extends ListActivity {
 		setContentView(R.layout.activity_main);
 		textView = (TextView) findViewById(R.id.textView1);
 		mButtonConectarse = (Button) findViewById(R.id.btn_conectar);
-		// mButtonEnviar = (Button) findViewById(R.id.btn_enviar);
 		mButtonDesconectar = (Button) findViewById(R.id.btn_desconectar);
-		// mButtonPresencia = (Button) findViewById(R.id.btn_presencia);
 		getBT();
 		openBT();
 		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
@@ -76,6 +75,41 @@ public class MainActivity extends ListActivity {
 
 		setListAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, s));
+	}
+
+	public void opencashLocal(View v){
+		InputStream input = getResources().openRawResource(R.raw.opncash);
+		textView.setText("");		
+
+		try {
+			Log.d(TAG, "Cantdidad de bytes " + input.available());
+			byte[] buffer = new byte[input.available()];
+			int bytesRead;
+			while ((bytesRead = input.read(buffer)) != -1) {
+				Log.d(TAG, "array" + Arrays.toString(buffer));
+			}
+			
+			for (int j = 0; j < buffer.length; j = j + 44) {
+				int i = 0;
+				int n = buffer[j + i] + 256 * buffer[j + i + 1] + 256 * 256
+						* buffer[j + i + 2] + 256 * 256 * 256
+						* buffer[j + i + 3];
+
+				String moneda = "M" + String.valueOf(n);
+
+				i = 4;
+				n = buffer[j + i] + 256 * buffer[j + i + 1] + 256 * 256
+						* buffer[j + i + 2] + 256 * 256 * 256
+						* buffer[j + i + 3];
+
+				String cantidad = String.valueOf(n);
+				Log.d(TAG, moneda + " " + cantidad);
+				textView.setText(textView.getText().toString() + "\n" + moneda + " " + cantidad);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -100,7 +134,7 @@ public class MainActivity extends ListActivity {
 					"El dispositivo si tiene bluetooth: "
 							+ mBluetoothAdapter.getName() + " - "
 							+ mBluetoothAdapter.getAddress(),
-					Toast.LENGTH_SHORT).show();
+							Toast.LENGTH_SHORT).show();
 			Log.d(TAG,
 					"El dispositivo si tiene bluetooth: "
 							+ mBluetoothAdapter.getName() + " - "
@@ -204,9 +238,9 @@ public class MainActivity extends ListActivity {
 
 		Bos bos = new Bos(mConnectedThread.mmInStream,
 				mConnectedThread.mmOutStream);
-//		Toast.makeText(this, "ejecuantodo getfile", Toast.LENGTH_SHORT).show();
+		//		Toast.makeText(this, "ejecuantodo getfile", Toast.LENGTH_SHORT).show();
 		if (bos.getFile("OPNCASH.DAT")) {
-			
+
 			for (int j = 0; j < bos.file.length; j = j + 44) {
 				int i = 0;
 				int n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
@@ -266,7 +300,7 @@ public class MainActivity extends ListActivity {
 					Log.d(TAG, "Mensaje obtenido: " + readMessage);
 					// Envia el mensaje para manejarlo en la UI
 					mHandler.obtainMessage(MESSAGE_READ, bytes, -1, buffer)
-							.sendToTarget();
+					.sendToTarget();
 				} catch (IOException e) {
 					break;
 				}
