@@ -1,57 +1,54 @@
 package cl.vendomatica.vendroid.contadores.spengler;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.util.Log;
+import cl.vendomatica.spengler.Comm;
 
 public class Transaction {
 private static final String TAG = "Transaction";
-//    private Comm _comm;
-//
     public Message request;
     public Message response;
+    private Comm _comm;
 
-	public Transaction(InputStream mmInStream, OutputStream mmOutStream/*Comm comm*/)
-    {
-		Log.d(TAG, "Creando objeto");
-//        _comm = comm;
-//
-        request = new Message(mmOutStream);
-        response = new Message(mmInStream);
-    }
+    
 	
+	public Transaction(Comm comm) {
+		Log.d(TAG, "Creando objeto");
+		_comm = comm;
+      request = new Message(_comm);
+      response = new Message(_comm);
+	}
+
 	private boolean Execute()
     {
         try
         {
-        	request.send();
-        	
-            response.receiveUntilStop();
+        	response.receiveUntilStop();
 
             Thread.sleep(100);
 
-//            request.send();
+            request.send();
 
             Thread.sleep(100);
 
-//            if (!response.receiveUntilStop())
-//                return (false);
+            if (!response.receiveUntilStop())
+                return (false);
 
             Thread.sleep(100);
 
-//            if (!response.receive())
-//                return (false);
+            if (!response.receive())
+                return (false);
 
             return (true);
         }
         catch (Exception e) {
+        	e.printStackTrace();
             return (false);
         }
     }
 
     public boolean RemoteXCount()
     {
+    	Log.d(TAG, "Ejecutando RemoteXCount");
         int i;
 
         TxXCount txXCount = new TxXCount();
@@ -60,7 +57,9 @@ private static final String TAG = "Transaction";
 
         try
         {
-            if (Execute())
+        	Log.d(TAG, "Ejecutando RemoteXCount Execute");
+        	boolean exe = Execute();
+            if (exe)
             {
                 for (i = 0; i < 4; i++)
                     request.header.dst[i] = response.header.src[i];
@@ -74,19 +73,21 @@ private static final String TAG = "Transaction";
         {    
             request.body.data = null;
             response.body.data = null;
-        } 
+        }
+		
     }
 
     public boolean RemoteFirst(String fileName, byte[] size)
     {
         int i;
-        Log.d(TAG, "RemoteFirst: " + fileName);
+        Log.d(TAG, "Ejecutando RemoteFirst: " + fileName);
         TxFirst txFirst = new TxFirst(fileName);
 
         request.body.data = txFirst.ToByteArray();
 
         try
         {
+        	Log.d(TAG, "Ejecutando RemoteFirst Execute");
             if (!Execute())
                 return (false);
 
@@ -114,6 +115,8 @@ private static final String TAG = "Transaction";
 
     public boolean RemoteOpen(String fileName, byte[] handle)
     {
+
+    	Log.d(TAG, "Ejecutando RemoteOpen");
         int i;
 
         TxFOpen txFOpen = new TxFOpen(fileName);
@@ -149,6 +152,8 @@ private static final String TAG = "Transaction";
 
     public boolean RemoteRead(byte[] handle, byte[] size, byte[] file)
     {
+
+    	Log.d(TAG, "Ejecutando RemoteRead");
         int i;
 
         TxFRead txFRead = new TxFRead(handle, size);
@@ -184,6 +189,8 @@ private static final String TAG = "Transaction";
 
     public boolean RemoteClose(byte[] handle)
     {
+
+    	Log.d(TAG, "Ejecutando RemoteClose");
         TxFClose txFClose = new TxFClose(handle);
 
         request.body.data = txFClose.ToByteArray();

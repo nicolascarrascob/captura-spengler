@@ -12,7 +12,7 @@ public class Header {
 	public Header()
     {
         dst = new byte[] { 0x00, 0x00, 0x00, 0x00 };
-        src = new byte[] { (byte) 0xFE, (byte) 0xFF, (byte) 0x0FF, (byte) 0xFF };
+        src = new byte[] { (byte) 0xFE, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF };
         tsk = 0x01;
         typ = 0x01;
         seq = 0x01;
@@ -22,10 +22,13 @@ public class Header {
 	
 	private int Checksum(int sum, byte data)
     {                            
-        sum ^= data;
+//        sum ^= (0x000000FF & (data));
+        sum = 0x000000FF & (sum ^ data);
+//        sum ^= data;
             
         if ((sum & 0x01) == 0x01)                    
-            sum = (sum >> 1) | 0x80;                
+//            sum = (sum >> 1) | 0x80;                
+        sum = (sum >> 1) | (0x000000FF & (0x80));                
         else                    
             sum = sum >> 1;
 

@@ -16,7 +16,8 @@ public class TxFOpen {
 
         for (i = 0; i < fileName.length(); i++)
         {
-            c = (char) fileName.substring(i, 1).charAt(0);
+            c = (char) fileName.charAt(i);
+//            c = (char) fileName.substring(i, 1).charAt(0);
             Name[i] = (byte)c;
         }
 
