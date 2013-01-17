@@ -15,6 +15,7 @@ public class Comm {
 	private final byte START_CHAR3 = 0x23;
 	private int TIMEOUT = 30;
 	private byte ENDCHAR = 0x03;
+	boolean debug = false;
 
 	OutputStream outputStream;
 	InputStream inputStream;
@@ -31,6 +32,8 @@ public class Comm {
 		try
 		{
 			int i = 0x000000FF & ((int) buffer[0]);
+			if(debug)
+			Log.d("COMM","Envia: " + buffer[0] +"");
 //			Log.d("COMM","Envia: " + i +"");
 			outputStream.write(i);
 		} catch (IOException e) {
@@ -98,8 +101,8 @@ public class Comm {
 
 			n = inputStream.read(buffer, 0, 1);
 			data = buffer[0];
-
-//			Log.d("COMM","Lee: " + (0x000000FF & ((int) data)) +"");
+			if(debug)
+			Log.d("COMM","Lee: " + (0x000000FF & ((int) data)) +"");
 			resultado.setB(data);
 			resultado.setResult(n!= 0);
 			return resultado;
@@ -130,12 +133,13 @@ public class Comm {
 		{
 			CommReadReturn retornoRead = read( b);
 			if ( !retornoRead.isResult()) {
-
+				if(debug)
 				Log.d("COMM","Lee: retorna false");
 				return (false);
 			}
 
 			b = retornoRead.getB();
+//			Log.d("COM", b);
 			if (b != ESC_CHAR)
 				data[i] = b;
 			else
@@ -143,7 +147,7 @@ public class Comm {
 				retornoRead = read( b);
 				if (!retornoRead.isResult() )
 					return (false);
-
+				 b = retornoRead.getB();
 				switch (b)
 				{
 				case 0x30:                                

@@ -36,10 +36,10 @@ private static final String TAG = "Bos";
     {
 		Log.d(TAG, "Connect");
 
-//        if (!transaction.RemoteXCount())
-//            if (!transaction.RemoteXCount())
-//                return (false);
-//            
+        if (!transaction.RemoteXCount())
+            if (!transaction.RemoteXCount())
+                return (false);
+            
         return (true);
     }
 	
@@ -53,9 +53,10 @@ private static final String TAG = "Bos";
             return (false);
 
         n = MainActivity.convertirByte(size[0]) + 256 * MainActivity.convertirByte(size[1]);
+//        n = size[0] + 256 * size[1];
 
-//        if (n==0)
-//            return (false);
+        if (n==0)
+            return (false);
 
         if (file != null)
             file = null;

@@ -227,30 +227,51 @@ public class MainActivity extends ListActivity {
 			Bos bos = new Bos(inputStream, outputStream);
 
 			if(!bos.connect("", false)){
+				Toast.makeText(this, "NO SE PUDO CONECTAR A SPENGLER", Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "No pudo conectar a Spengler");
 				socket.close();
 			}else{
-
+				Toast.makeText(this, "CONECTADO A SPENGLER", Toast.LENGTH_SHORT).show();
 				Log.d(TAG, "Conectado a Spengler");
 
 				if (bos.getFile("OPNCASH.DAT")) {
 					Log.d(TAG, "Abrio");
 					for (int j = 0; j < bos.file.length; j = j + 44) {
 						int i = 0;
-						int n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
-								* bos.file[j + i + 2] + 256 * 256 * 256
-								* bos.file[j + i + 3];
+						int n = convertirByte(bos.file[j + i]) + 256 * convertirByte(bos.file[j + i + 1]) + 256 * 256
+								* convertirByte(bos.file[j + i + 2]) + 256 * 256 * 256
+								* convertirByte(bos.file[j + i + 3]);
 
 						String moneda = "M" + String.valueOf(n);
 
 						i = 4;
-						n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
-								* bos.file[j + i + 2] + 256 * 256 * 256
-								* bos.file[j + i + 3];
+						n = convertirByte(bos.file[j + i]) + 256 * convertirByte(bos.file[j + i + 1]) + 256 * 256
+								* convertirByte(bos.file[j + i + 2]) + 256 * 256 * 256
+								* convertirByte(bos.file[j + i + 3]);
 
 						String cantidad = String.valueOf(n);
 						Log.d(TAG, moneda + " " + cantidad);
+						Toast.makeText(this, moneda + " " + cantidad, Toast.LENGTH_SHORT).show();
+						textView.setText(textView.getText().toString() + "\n" + moneda + " " + cantidad);
 					}
+					
+//					for (int j = 0; j < bos.file.length; j = j + 44) {
+//						int i = 0;
+//						int n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
+//								* bos.file[j + i + 2] + 256 * 256 * 256
+//								* bos.file[j + i + 3];
+//
+//						String moneda = "M" + String.valueOf(n);
+//
+//						i = 4;
+//						n = bos.file[j + i] + 256 * bos.file[j + i + 1] + 256 * 256
+//								* bos.file[j + i + 2] + 256 * 256 * 256
+//								* bos.file[j + i + 3];
+//
+//						String cantidad = String.valueOf(n);
+//						Toast.makeText(this, moneda + " " + cantidad, Toast.LENGTH_SHORT).show();
+//						Log.d(TAG, moneda + " " + cantidad);
+//					}
 				}
 			}
 

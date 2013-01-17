@@ -30,7 +30,8 @@ public class RxFRead {
             j++;
         }
 
-        cnt = Count[1] * 256 + Count[0];
+        cnt = (0x000000FF & ((int)Count[1]))  * 256 + (0x000000FF & ((int)Count[0]));
+//        cnt = Count[1] * 256 + Count[0];
         dta = new byte[cnt];
 
         for (i = 0; i < cnt; i++)

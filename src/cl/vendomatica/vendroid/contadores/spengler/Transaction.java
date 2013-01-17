@@ -91,6 +91,7 @@ private static final String TAG = "Transaction";
             if (!Execute())
                 return (false);
 
+            Log.d(TAG, "Finaliza RemoteFirst Execute");
             RxFirst rxFirst = new RxFirst(response.body.data);
 
             try
@@ -125,6 +126,7 @@ private static final String TAG = "Transaction";
 
         try
         {
+        	Log.d(TAG, "Ejecutando RemoteOpen Execute");
             if (!Execute())
                 return (false);
 
@@ -197,6 +199,7 @@ private static final String TAG = "Transaction";
 
         try
         {
+        	Log.d(TAG, "Ejecutando RemoteClose Execute");
             if (!Execute())
                 return (false);
 
